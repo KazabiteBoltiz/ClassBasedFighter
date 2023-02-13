@@ -1,0 +1,37 @@
+{
+  "name": "P:SK",
+  "tree": {
+    "$className": "DataModel",
+    "$ignoreUnknownInstances": true,
+
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "$ignoreUnknownInstances": true,
+      "$path": "src/shared",
+
+      "Packages": {
+        "$path" : "Packages"
+      }
+
+    },
+
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "$path": "src/server"
+    },
+
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "$ignoreUnknownInstances": true,
+      
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "$path": "src/client/player"
+      },
+      "StarterCharacterScripts": {
+        "$className": "StarterCharacterScripts",
+        "$path": "src/client/character"
+      }
+    }
+  }
+}
