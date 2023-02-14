@@ -6,12 +6,17 @@ local ServerS = game:GetService('ServerScriptService')
 local Modules = RepS.Modules
 local StateMachine = require(Modules.StateMachine)
 
+local function time()
+    return workspace:GetServerTimeNow()
+end
+
 local Battle = Knit.CreateService{
     Name = 'Battle',
 
     Client = {
-        OnAttack = Knit.CreateSignal(), 
+        AbilityRequest = Knit.CreateSignal(), 
         AbilityLog = Knit.CreateProperty(),
+        AbilityCooldown = Knit.CreateProperty()
     }
 }
 
@@ -32,7 +37,16 @@ function Battle:KnitStart()
             self.StateMachines[plr.UserId]:Destroy()
         end
 
-        self.Client.AbilityLog:ClearFor(plr)
+        self.Client.AbilityLog:SetFor(plr, {})
+
+        local cdTable = {}
+        local allAbilities = FighterModules[fighterClass]:GetChildren()
+        for _, abilityModule in ipairs(allAbilities) do
+            cdTable[abilityModule.Name] = 0
+            print('setting :', abilityModule.Name, 'to', cdTable)
+        end
+        self.Client.AbilityCooldown:SetFor(plr, cdTable)
+
         self.StateMachines[plr.UserId] = {}
 
         StateMachine.Create(
@@ -51,6 +65,32 @@ function Battle:KnitStart()
 
     end
         
+    local function onAbilityRequest(plr, ability)
+
+        local class = FighterUpdate.Client.FighterClass:GetFor(plr)
+        local abilityIsValid = FighterModules[class]:FindFirstChild(ability)
+        
+        if not abilityIsValid then return end
+
+        local plrStateMachine = self.StateMachines[plr.UserId]
+        local currentAbility = plrStateMachine.State
+
+        local cdData = self.Client.AbilityCooldown:GetFor(plr)
+        local now = time()
+        if now - cdData[ability] > 0 then
+            print('Valid Move!')
+            cdData[ability] = now + 5
+            print('updating client...')
+            self.Client.AbilityCooldown:SetFor(plr, cdData)
+        else
+            return
+        end
+
+        plrStateMachine:ChangeState(ability)
+
+    end
+
+    self.Client.AbilityRequest:Connect(onAbilityRequest)
     FighterUpdate.FighterChanged:Connect(onFighterChanged)
     
 end

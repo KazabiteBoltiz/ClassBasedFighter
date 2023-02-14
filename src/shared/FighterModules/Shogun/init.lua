@@ -6,8 +6,8 @@ local FighterClass = require(BaseClasses.Fighter)
 local Shogun = {}
 Shogun.__index = Shogun
 
-function Shogun.new()
-    local self = FighterClass.Setup(script, {}, {})
+function Shogun.new(BattleServer)
+    local self = FighterClass.Setup(script, BattleServer, {}, {})
 
     self.abilities = {
         [{'Q'}] = 'Incision',

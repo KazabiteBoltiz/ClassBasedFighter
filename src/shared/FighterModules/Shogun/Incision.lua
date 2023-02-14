@@ -33,7 +33,7 @@ function Incision:Start()
     local AnimTrack = self.mod.hum:LoadAnimation(Anim)
     AnimTrack:Play()
 
-    self.Battle.OnAttack:Fire('Incision')
+    self.Battle.AbilityRequest:Fire('Incision')
 
     self.myTrove:Add(AnimTrack, 'Stop')
 

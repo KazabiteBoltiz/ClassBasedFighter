@@ -17,8 +17,7 @@ function FighterUpdate:KnitStart()
         end
         if newClass then
             local newFighterModule = FighterModules:WaitForChild(newClass)
-            myFighterModule = require(newFighterModule).new()
-            myFighterModule.BattleServer = BattleServer
+            myFighterModule = require(newFighterModule).new(BattleServer)
         end
     end
 
